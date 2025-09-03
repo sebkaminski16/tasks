@@ -27,4 +27,14 @@ public class DbService {
     public Task saveTask(Task task) {
         return this.taskRepository.save(task);
     }
+
+    public void deleteTask(Long id) throws TaskNotFoundException {
+        try {
+            // checks if the task is there, if it's not then there should be no possibility to delete it
+            this.getTask(id);
+            this.taskRepository.deleteById(id);
+        } catch (TaskNotFoundException e) {
+            throw new TaskNotFoundException();
+        }
+    }
 }
