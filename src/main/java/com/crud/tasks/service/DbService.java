@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DbService {
@@ -16,5 +17,9 @@ public class DbService {
 
     public List<Task> getAllTasks() {
         return this.taskRepository.findAll();
+    }
+
+    public Optional<Task> getTask(Long id) {
+        return this.taskRepository.findById(id);
     }
 }

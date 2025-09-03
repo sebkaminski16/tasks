@@ -6,7 +6,9 @@ import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,9 @@ public class TaskController {
 
     @GetMapping(value = "{taskId}")
     public TaskDto getTask(@PathVariable  Long taskId) {
-        return new TaskDto(1L, "test title", "test_content");
+        Task task = this.dbService.getTask(taskId).orElse(null);
+        if(task == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return this.taskMapper.mapToTaskDto(task);
     }
 
     @DeleteMapping(value = "{taskId}")
