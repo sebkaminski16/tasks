@@ -1,6 +1,8 @@
 package com.crud.tasks.trello.client;
 
+import com.crud.tasks.domain.CreatedTrelloCard;
 import com.crud.tasks.domain.TrelloBoardDto;
+import com.crud.tasks.domain.TrelloCardDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -31,17 +33,33 @@ public class TrelloClient {
     @Value("${trello.app.username}")
     private String trelloAppUsername;
 
-    private URI buildTrelloConnectionURI() {
+    private URI buildTrelloBoardConnectionURI() {
         return UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/" + trelloAppUsername + "/boards")
                 .queryParam("key", trelloAppKey)
                 .queryParam("token", trelloAppToken)
+                .queryParam("fields", "name,id")
+                .queryParam("lists", "all")
                 .build()
                 .encode().toUri();
     }
 
     public List<TrelloBoardDto> getTrelloBoards() {
-        URI url = buildTrelloConnectionURI();
+        URI url = buildTrelloBoardConnectionURI();
         TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
         return Optional.ofNullable(boardsResponse).map(Arrays::asList).orElse(Collections.emptyList());
+    }
+
+    public CreatedTrelloCard createNewCard(TrelloCardDto trelloCardDto) {
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/cards")
+                .queryParam("key", trelloAppKey)
+                .queryParam("token", trelloAppToken)
+                .queryParam("name", trelloCardDto.getName())
+                .queryParam("desc", trelloCardDto.getDescription())
+                .queryParam("pos", trelloCardDto.getPos())
+                .queryParam("idList", trelloCardDto.getListId())
+                .build()
+                .encode()
+                .toUri();
+        return restTemplate.postForObject(url, null, CreatedTrelloCard.class);
     }
 }
