@@ -5,9 +5,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreatedTrelloCard {
-    private String id;
-    private String name;
-    private String shortUrl;
-    private TrelloBadgesDto badges;
+public class TrelloBadgesDto {
+    private int votes;
+    private TrelloAttachmentsByTypeDto attachmentsByType;
 }
