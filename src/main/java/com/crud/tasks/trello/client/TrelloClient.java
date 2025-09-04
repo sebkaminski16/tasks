@@ -18,20 +18,29 @@ import java.util.Optional;
 public class TrelloClient {
 
     private final RestTemplate restTemplate;
+
     @Value("${trello.api.endpoint.prod}")
     private String trelloApiEndpoint;
+
     @Value("${trello.app.key}")
     private String trelloAppKey;
+
     @Value("${trello.app.token}")
     private String trelloAppToken;
 
-    public List<TrelloBoardDto> getTrelloBoards() {
-        URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/sebastiank216/boards")
+    @Value("${trello.app.username}")
+    private String trelloAppUsername;
+
+    private URI buildTrelloConnectionURI() {
+        return UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/" + trelloAppUsername + "/boards")
                 .queryParam("key", trelloAppKey)
                 .queryParam("token", trelloAppToken)
                 .build()
                 .encode().toUri();
+    }
 
+    public List<TrelloBoardDto> getTrelloBoards() {
+        URI url = buildTrelloConnectionURI();
         TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
         return Optional.ofNullable(boardsResponse).map(Arrays::asList).orElse(Collections.emptyList());
     }
