@@ -17,24 +17,21 @@ public class DbService {
     private TaskRepository taskRepository;
 
     public List<Task> getAllTasks() {
-        return this.taskRepository.findAll();
+        return taskRepository.findAll();
     }
 
     public Task getTask(Long id) throws TaskNotFoundException {
-        return this.taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
+        return taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
     }
 
     public Task saveTask(Task task) {
-        return this.taskRepository.save(task);
+        return taskRepository.save(task);
     }
 
     public void deleteTask(Long id) throws TaskNotFoundException {
-        try {
-            // checks if the task is there, if it's not then there should be no possibility to delete it
-            this.getTask(id);
-            this.taskRepository.deleteById(id);
-        } catch (TaskNotFoundException e) {
+        if(!taskRepository.existsById(id)) {
             throw new TaskNotFoundException();
         }
+        taskRepository.deleteById(id);
     }
 }
