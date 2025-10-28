@@ -45,7 +45,7 @@ public class StringToIntConverterTestSuite {
         String number = "Not a number";
         //act
         //assert
-        Assertions.assertThrows(NotANumberException.class, () -> stringToIntConverter.convert(number));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> stringToIntConverter.convert(number));
     }
 
 }

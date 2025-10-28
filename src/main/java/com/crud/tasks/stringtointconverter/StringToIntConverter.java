@@ -21,7 +21,7 @@ public class StringToIntConverter {
         boolean isANumber = matcher.find();
 
         if(!isANumber) {
-            throw new NotANumberException();
+            throw new IllegalArgumentException();
         }
 
         double resultDoubleNumber = Double.parseDouble(number);
