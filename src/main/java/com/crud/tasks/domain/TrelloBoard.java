@@ -9,10 +9,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TrelloBoardDto {
-
+public class TrelloBoard {
     private String id;
     private String name;
-    private List<TrelloListDto> lists;
-
+    private List<TrelloList> lists;
 }
