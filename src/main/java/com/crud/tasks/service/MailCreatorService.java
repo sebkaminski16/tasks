@@ -32,4 +32,14 @@ public class MailCreatorService {
         return templateEngine.process("mail/created-trello-card-mail", context);
     }
 
+    public String buildTaskNumberInformationEmail(String message) {
+        Context context = new Context();
+        context.setVariable("message", message);
+        context.setVariable("tasks_url", "http://localhost:8888/crud");
+        context.setVariable("button", "Check out");
+        context.setVariable("admin_name", adminConfig.getAdminName());
+        context.setVariable("company_name", mailConfig.getCompanyName());
+        return templateEngine.process("mail/task-number-information-mail", context);
+    }
+
 }

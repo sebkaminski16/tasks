@@ -39,7 +39,7 @@ class EmailSchedulerTestSuite {
         //act
         emailScheduler.sendInformationEmail();
         //assert
-        verify(simpleMailService, times(1)).send(mailCaptor.capture());
+        verify(simpleMailService, times(1)).send(mailCaptor.capture(), SimpleMailService.KindOfMail.TRELLO_CARD);
         Mail sentMail = mailCaptor.getValue();
 
         assertEquals("admin@test.com", sentMail.getMailTo());

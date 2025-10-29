@@ -36,7 +36,7 @@ class SimpleMailServiceTest {
         mailMessage.setText(mail.getMessage());
 
         //When
-        simpleMailService.send(mail);
+        simpleMailService.send(mail, SimpleMailService.KindOfMail.TRELLO_CARD);
 
         //Then
         verify(javaMailSender, times(1)).send(mailMessage);

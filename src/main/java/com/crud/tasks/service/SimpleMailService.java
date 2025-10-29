@@ -18,6 +18,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SimpleMailService {
 
+    public enum KindOfMail {
+        TRELLO_CARD,
+        TASK_NUMBER_INFORMATION
+    }
+
     @Autowired
     private MailCreatorService mailCreatorService;
     private final JavaMailSender javaMailSender;
@@ -32,20 +37,23 @@ public class SimpleMailService {
         return smm;
     }
 
-    private MimeMessagePreparator createMimeMessage(final Mail mail) {
+    private MimeMessagePreparator createMimeMessage(final Mail mail, KindOfMail kindOfMail) {
         return mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setTo(mail.getMailTo());
             messageHelper.setSubject(mail.getSubject());
-            messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
+            switch(kindOfMail) {
+                case KindOfMail.TRELLO_CARD -> messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
+                case KindOfMail.TASK_NUMBER_INFORMATION -> messageHelper.setText(mailCreatorService.buildTaskNumberInformationEmail(mail.getMessage()), true);
+            }
         };
     }
 
-    public void send(Mail mail) {
+    public void send(Mail mail, KindOfMail kindOfMail) {
         log.info("Starting email preparation...");
 
         try {
-            javaMailSender.send(createMimeMessage(mail));
+            javaMailSender.send(createMimeMessage(mail, kindOfMail));
             log.info("Email has been sent!");
         } catch (MailException e) {
             log.error("Failed to send an email: " + e.getMessage(), e);

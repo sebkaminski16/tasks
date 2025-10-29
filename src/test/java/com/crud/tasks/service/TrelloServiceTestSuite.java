@@ -75,6 +75,6 @@ class TrelloServiceTestSuite{
         //assert
         assertNull(result);
         verify(trelloClient, times(1)).createNewCard(trelloCardDto);
-        verify(emailService, never()).send(any(Mail.class));
+        verify(emailService, never()).send(any(Mail.class), SimpleMailService.KindOfMail.TRELLO_CARD);
     }
 }
